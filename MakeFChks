@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+#
+# POD block.  To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+B<MakeFChks> - This script is used to form formatted checkpoint files from
+a collection of (binary) checkpoint files.
+
+=head1 USAGE
+
+To form formatted checkpoint files from all of the (binary) checkpoint
+files present in the current working directory, simply exectue this script.
+No command line arguments are used.
+
+=head1 SYNOPSIS
+
+This script forms Gaussian formatted checkpoint files (*.fchk) from all of
+the checkpoint files (*.chk) in the working directory.  Exisiting fchk
+files are overwritten if an accompanying chk file also exists.
+
+=head1 OPTIONS
+
+At present, there are no available options.
+
+=head1 AUTHOR
+
+=over 2
+
+=item Hrant P. Hratchian
+
+=item Department of Chemistry & Chemical Biology
+
+=item University of California, Merced
+
+=item hhratchian@ucmerced.edu
+
+=back
+
+=cut
+
+#
+    @chk_files=glob"*.chk";
+    foreach(@chk_files){
+      chomp;
+      $name = $_;
+      $name =~ s/\.chk//;
+      print "Making FChk file for $name.\n";
+      `formchk $name`;
+    }

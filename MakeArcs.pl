@@ -4,15 +4,13 @@
 #   files.
 #
 #
-#   Most Recent Modification Date: 4/21/2010
+#   Most Recent Modification Date: 1/1/2020
 #                   Hrant P. Hratchian,
-#                   Gaussian, Inc.
-#                   Wallingford, CT 06492
-#                   hrant@gaussian.com
+#                   Department of Chemistry & Chemical Biology
+#                   University of California, Merced
+#                   hhratchian@ucmerced.edu
 #
 #
-    use lib "/mf/hrant/bin/";
-    use lib "/home/hrant/bin/";
     use lib "/Users/hhratchian/bin/";
     use lib "/home/hhratchian/bin";
     use GaussLib;

@@ -23,10 +23,11 @@
 #
 #
 #
-#   Most Recent Modification Date: 7/14/2008
+#   Most Recent Modification Date: 10/1/2019
 #                   Hrant P. Hratchian,
-#                   Dept. of Chemistry, Indiana University
-#                   hhratchi@indiana.edu
+#                   Deptartment of Chemistry & Chemical Biology
+#                   University of California, Merced
+#                   hhratchian@ucmerced.edu
 #
 #
     package GaussLib;
