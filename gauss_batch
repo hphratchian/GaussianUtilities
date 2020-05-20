@@ -1,0 +1,136 @@
+#!/usr/bin/perl
+#
+# POD block.  To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+B<gauss_batch> - This script is used to run Gaussian jobs in as a batched
+set.  files as part of code testing.
+
+=head1 USAGE
+
+To run the entire set of jobs (all of which must use the .com or .gjf
+extensionis) in the current directory use the command line entry:
+
+=over
+
+%>./gauss_batch.pl
+
+=back
+
+To run only test003.com and test006.com use the command line entry:
+
+=over
+
+%>./gauss_batch.pl test003.com test006.com
+
+=back
+
+=head1 SYNOPSIS
+
+This script is used to run Gaussian jobs in as a batched set.
+
+By default, the script runs all jobs that have the form *.com or *.gjf.
+Alternatively, the list of jobs to batch can be given on the command line.
+
+Gaussian is run using either the "gdv", "gt", or "gt1" commands.  The
+default operation is "gdv"; the "gt" and "gt1" commands can be specified
+with command line switches (see options below).
+
+=head1 OPTIONS
+
+The available options are:
+
+=over
+
+=item B<-gdv>
+
+=over
+
+Use the "gdv" command when running jobs.
+
+=back
+
+=item B<-g09>
+
+=over
+
+Use the "g09" command when running jobs.
+
+=back
+
+=item B<-gt>
+
+=over
+
+Use the "gt" command when running jobs.
+
+=back
+
+=item B<-gt1>
+
+=over
+
+Use the "gt1" command when running jobs.
+
+=back
+
+=head1 AUTHOR
+
+=over 2
+
+=item Hrant P. Hratchian
+
+=item Gaussian, Inc.
+
+=item 340 Quinnipiac St., Bldg. 40
+
+=item Wallingford, CT 06492
+
+=item hrant@gaussian.com
+
+=back
+
+=head1 HISTORY
+
+Latest Modification(s): October 28, 2008.
+
+=cut
+
+#
+#   Load arguments and build the list of input files.
+#
+    $gauss_cmd = "gt";
+    foreach $temp (@ARGV){
+      chomp($temp);
+      if($temp =~ /^-/){
+        if($temp =~ /^-gdv$/){
+          $gauss_cmd = "gdv";
+        }elsif($temp =~ /^-g09$/){
+          $gauss_cmd = "g09";
+        }elsif($temp =~ /^-gt$/){
+          $gauss_cmd = "gt";
+        }elsif($temp =~ /^-gt1$/){
+          $gauss_cmd = "gt1";
+        }else{
+          die "\n\nUnknown argument: $temp\n\n";
+        }
+      }else{
+        push(@in_files,$temp);
+      }
+    }
+    unless(@in_files){@in_files = glob "*.com *.gjf"};
+#
+#   Run the jobs.
+#   
+    foreach $current_job (@in_files){
+      chomp($current_job);
+      $current_job_short = $current_job;
+      $current_job_short =~ s/\.(com|gjf)$//;
+      print "\nRunning $current_job...\n";
+      system "/bin/tcsh", "-c", "$gauss_cmd < $current_job >& $current_job_short.log";
+      print "   Done with $current_job\n";
+    }
+    print "\n\nBatch run complete.\n";

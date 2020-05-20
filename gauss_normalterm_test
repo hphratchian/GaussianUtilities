@@ -1,0 +1,125 @@
+#!/usr/bin/perl
+#
+# POD block. To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+B<gauss_normalterm_test> - This script tests for normal termination of
+Gaussian jobs.
+
+=head1 USAGE
+
+To check on the termination status of all Gaussian log files in the current
+working directory, use the command:
+
+=over
+
+B<gauss_normalterm_test>
+
+=back
+
+To check the termination status of files gauss-1.log, gauss-2.log, and
+gauss-3.out, use the command:
+
+=over
+
+B<gauss_normalterm_test> F<gauss-1.log> F<gauss-2.log> F<gauss-3.out>
+
+=back
+
+To check on all files with the extension out, use the command:
+
+=over
+
+B<gauss_normalterm_test> F<*.out>
+
+=back
+
+=head1 SYNOPSIS
+
+This script is used to test for normal termination of Gaussian jobs. When
+executed, this script takes a list of Gaussian output file names, including
+file extentions. The output of the script is a list of files that have
+normal termination stamps and a list of files that have not terminated
+properly.
+
+
+=head1 OPTIONS
+
+At present, there are no available options.
+
+=head1 AUTHOR
+
+=over 2
+
+=item Hrant P. Hratchian
+
+=item Gaussian, Inc.
+
+=item 340 Quinnipiac St, Bldg 40
+
+=item Wallingford, CT 06492
+
+=item hrant@gaussian.com
+
+=back
+
+=head1 HISTORY
+
+Latest Modification(s): May 22, 2009.
+
+=cut
+
+#
+    use lib "/home/hrant/bin/";
+    use lib "/mf/hrant/bin/";
+    use lib "/Users/hhratchian/bin/";
+    use GaussLib;
+#
+#   Get the atom number and names of the files we need to look at.
+#
+    chomp((@gaussian_files)=@ARGV);
+    if(!@gaussian_files){@gaussian_files=glob"*.log"};
+#
+#   Get the normal termination flags.
+#
+    foreach $file_name (@gaussian_files){
+      chomp($file_name);
+      ($normal_term,$Maximum_Force,$RMS_Force,$Maximum_Displacement,
+        $RMS_Displacement,$oniom_energy,$zpe_correction_logfile,
+        $thermal_correction_enthalpy,$thermal_correction_gibbs,$temperature,
+        $pressure,$archive) = get_gauss_log_data($file_name);
+      if($normal_term==0){
+        push (@good,$file_name);
+      }elsif($normal_term==1){
+        push (@fail,$file_name);
+      }elsif($normal_term==2){
+        push (@no_archive,$file_name);
+      }
+    }
+    $num_good = @good;
+    $num_fail = @fail;
+    $num_no_archive = @no_archive;
+#
+#   Print the results.
+#
+    if($num_good){
+      $temp = join " ",@good;
+      print "$num_good files with normal termination:\n$temp\n\n";
+    }else{
+      print "NO normally terminated jobs!\n\n";
+    }
+    if($num_no_archive){
+      $temp = join " ",@no_archive;
+      print "$num_no_archive files w/o archives:\n$temp\n\n";
+    }else{
+      print "NO files missing archives.\n\n";
+    }
+    if($num_fail){
+      $temp = join " ",@fail;
+      print "$num_fail FAILED job files:\n$temp\n\n";
+    }else{
+      print "NO failed jobs.\n\n";
+    }
