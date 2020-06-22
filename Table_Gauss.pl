@@ -102,6 +102,8 @@
 #   -----------------------------------------------------------------------
 #   Option*              Table Heading
 #   -----------------------------------------------------------------------
+#   -date                Job date
+#
 #   -job_type            Job Type
 #   -jobtype
 #   -type
@@ -285,7 +287,9 @@
 #
     foreach(@ARGV){
       chomp($_);
-      if(/^-(job_type||jobtype||type)$/i){
+      if(/^-date$/i){
+        push(@Table_Entries,"Date");
+      }elsif(/^-(job_type||jobtype||type)$/i){
         push(@Table_Entries,"Job Type");
       }elsif(/^-(model_chemistry||model_chem||modelchem)$/i){
         push(@Table_Entries,"Model Chem");
@@ -646,6 +650,14 @@
         }else{
           $Table_Header_Length += $File_Name_Length + (8 - $File_Name_Length%8);
         }
+      }elsif(/^Date$/){
+        $Table_Header_Format .= "\t%-$Job_Type_Length" . "s";
+        $Table_Line_Format   .= "\t%-$Job_Type_Length" . "s";
+        if($Job_Type_Length%8==0){
+          $Table_Header_Length += $Job_Type_Length;
+        }else{
+          $Table_Header_Length += $Job_Type_Length + (8 - $Job_Type_Length%8);
+        }
       }elsif(/^Job Type$/){
         $Table_Header_Format .= "\t%-$Job_Type_Length" . "s";
         $Table_Line_Format   .= "\t%-$Job_Type_Length" . "s";
@@ -936,6 +948,8 @@
           push(@Current_Table_Line,$Current_File);
         }elsif(/^Job Type$/){
           push(@Current_Table_Line,$job_type{$Current_File});
+        }elsif(/^Date$/){
+          push(@Current_Table_Line,$date{$Current_File});
         }elsif(/^Model Chem$/){
           push(@Current_Table_Line,$model_chemistry{$Current_File});
         }elsif(/^Hamiltonian$/){
