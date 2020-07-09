@@ -1,3 +1,4 @@
+com2gjf.pl
 GaussLib.pm
 MakeArcs.pl
 MakeFChks
@@ -5,4 +6,5 @@ Table_Gauss.pl
 gauss_batch
 gauss_normalterm_test
 glink_times.pl
+gjf2com.pl
 Opt_Convergence.pl
