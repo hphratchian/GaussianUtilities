@@ -160,7 +160,7 @@
       open GFILE,"< $gfile_name";
       while(<GFILE>){
         chomp;
-        if(/^\s*Leave Link\s+(\d+)\s+at\s+\S+\s+(\S+)\s+(\d+)\s(\d+):(\d+):(\d+)\s+(\d+),.+cpu:\s*(\S+)\s*$/){
+        if(/^\s*Leave Link\s+(\d+)\s+at\s+\S+\s+(\S+)\s+(\d+)\s(\d+):(\d+):(\d+)\s+(\d+),.+cpu:\s*(\S+)\s+elap:\s*\d+\.\d+\s*$/){
           $link_num = $1;
           $month = $2;
           $day = $3;
