@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+#
+#   This script is used to get the distance between two atoms from a
+#   Gaussian log file.  The log file must have an archive entry for this to
+#   work.  Exectution is carried out by:
+#
+#       %>gauss_get_distance ATOM_1 ATOM_2 FILE_1 FILE_2 ... FILE_N
+#
+#   ATOM_1 and ATOM_2 are the atom numbers of interest, and FILE_1 through
+#   FILE_N are the files of interest.
+#
+#
+#   Most Recent Modification Date: 4/17/2007
+#                   Hrant P. Hratchian,
+#                   Dept. of Chemistry, Indiana University
+#                   hhratchi@indiana.edu
+#
+#
+    use lib "/home/hrant/bin/";
+    use lib "/Users/hhratchian/bin/";
+    use GaussLib;
+#
+#   Get the atom number and names of the files we need to look at.
+#
+    chomp(($atom1,$atom2,@gaussian_files)=@ARGV);
+#
+#   Echo the atomic center numbers.
+#
+    print "\n-------------------------------\n";
+    print "Atom 1: $atom1\nAtom 2: $atom2\n\n";
+#
+#   Get the archive for the file.
+#
+    foreach $file_name (@gaussian_files){
+      chomp($file_name);
+      print "File Name: $file_name\n";
+      ($normal_term,$Maximum_Force,$RMS_Force,$Maximum_Displacement,
+        $RMS_Displacement,$oniom_energy,$zpe_correction_logfile,
+        $thermal_correction_enthalpy,$thermal_correction_gibbs,$temperature,
+        $pressure,$archive) = get_gauss_log_data($file_name);
+      if($normal_term){die "\n$file_name did not terminate normally!\n\n"}
+      push (@archives,$archive);
+    }
+#
+#   Now, get the distance between the two atoms requested.
+#
+    print "\nDistance Data:\n";
+    $i = 0;
+    foreach $temp (@archives){
+      ($route,$title,$mol_spec,$op_input) = gauss_archive_input_file_data($temp);
+      @cart = ();
+      @cart = gauss_molspec2cart($mol_spec,$op_input);
+      $distance = gauss_distance_cart($atom1,$atom2,@cart);
+#      print "  $distance\n";
+      printf "  %7.3f\n", $distance;
+      $i += 1;
+    }

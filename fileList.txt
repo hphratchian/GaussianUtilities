@@ -4,6 +4,11 @@ MakeArcs.pl
 MakeFChks
 Table_Gauss.pl
 gauss_batch
+gauss_get_angle
+gauss_get_cart
+gauss_get_distance
+gauss_get_force
+gauss_get_mulliken
 gauss_normalterm_test
 glink_times.pl
 gjf2com.pl

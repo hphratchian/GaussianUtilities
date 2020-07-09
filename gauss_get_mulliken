@@ -1,0 +1,68 @@
+#!/usr/bin/perl
+#
+# POD block.  To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+B<gauss_get_mulliken> - This script is used to get the last set of Mulliken
+charges in a Gaussian output file.
+
+=head1 USAGE
+
+The only command line argument sent to this routine is the name(s) of the
+Gaussian output file(s) to extract the charges from.
+
+=head1 AUTHOR
+
+=over 2
+
+=item Hrant P. Hratchian
+
+=item Gaussian, Inc.
+
+=item 340 Quinnipiac St., Bldg. 40
+
+=item Wallingford, CT 06492
+
+=item hrant@gaussian.com
+
+=back
+
+=head1 HISTORY
+
+Latest Modification(s): August 18, 2008.
+
+=cut
+#
+#
+    use lib "/mf/hrant/bin/";
+    use GaussLib;
+#
+#   Get the names of the files we need to look at.
+#
+    chomp(@gaussian_files=@ARGV);
+#
+#   Get the archive and then re-format and print.
+#
+    foreach $file (@gaussian_files){
+      print "\n-------------------------\nFile: $file\n";
+      $read_now = 0;
+      open LOGFILE,"$file";
+      while(<LOGFILE>){
+        chomp;
+        if(/^ Mulliken charges and spin densities:/){
+          $read_now = 1;
+          @mulliken_charges = ();
+        }elsif($read_now==1 && /^ Sum of Mulliken atomic charges =/){
+          $read_now = 0;
+        }elsif($read_now==1){
+          push(@mulliken_charges,$_);
+        }
+      }
+      print "\nMulliken Atomic Charges:\n";
+      foreach $temp (@mulliken_charges){
+        print "    $temp\n";
+      }
+    }

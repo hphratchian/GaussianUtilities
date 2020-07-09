@@ -1,0 +1,101 @@
+#!/usr/bin/perl
+#
+# POD block.  To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+B<gauss_get_force> - This script is used to extract the nuclear forces from
+a Gaussian archive.  Optionally, the maximum difference - element by
+element - in the forces between the first file given and each of the other
+files listed can be evaluated using the B<-diff> switch.
+
+=head1 SYNOPSIS
+
+B<gauss_get_force> [I<option_list>] F<files>
+
+=head1 DESCRIPTION
+
+This script is used to extract the nuclear forces from a Gaussian archive.  The Gaussian log files to extract archives from are given as command line arguments.
+
+=head1 AUTHOR
+
+=over
+
+=item Hrant P. Hratchian
+
+=item Department of Chemistry
+
+=item Indiana University
+
+=item hhratchi@indiana.edu
+
+=back
+
+=head1 HISTORY
+
+Latest Modification(s): March 25, 2008.
+
+=cut
+
+#
+#   Connect libs.
+#
+    use lib "/home/hrant/bin/";
+    use GaussLib;
+#
+#   Load the switches and filenames.
+#
+    foreach $temp (@ARGV){
+      chomp($temp);
+      if($temp =~ /^-/){
+        if($temp =~ /^-diff$/){
+          $do_diff = 1;
+        }else{
+          die "\n\nUnknown switch: $temp\n\n";
+        }
+      }else{
+        push(@gaussian_files,$temp);
+      }
+    }
+    unless(@gaussian_files){die "\n\nNo files given!\n\n";}
+#
+#   Get the archive and force for each file and then re-format and print.
+#
+    foreach $file (@gaussian_files){
+      ($normal_term,$Maximum_Force,$RMS_Force,$Maximum_Displacement,
+        $RMS_Displacement,$oniom_energy,$cpe_correction_logfile,
+        $thermal_correction_enthalpy,$thermal_correction_gibbs,$temperature,
+        $pressure,$archive) = get_gauss_log_data($file);
+      if($normal_term){die "\n$file did not terminate normally!\n\n"}
+      $archive = gauss_archive_format_1($archive); 
+      $current_force = gauss_archive_get_force($archive);
+      $i += 1;
+      print "Force $i: $current_force\n";
+      push(@forces,$current_force);
+    }
+#
+#   If the -diff switch was used, then give the maximum difference between
+#   each file's forces and the forces of the first file.
+#
+    if($do_diff){
+      unless(@gaussian_files >= 2){die "\n\n-diff switch selected, but < 2 files are given!\n\n";};
+      print "\n";
+      @ref_force = split /,/, $forces[0];
+      for($i=1;$i<@forces;$i++){
+        @temp_force = split /,/, $forces[$i];
+        unless(@temp_force == @ref_force){die "\n\nFile number $i does not have the same number of force elements as the reference force!\n\n";};
+        $max_diff = 0;
+        $max_position = 0;
+        for($j=0;$j<@ref_force;$j++){
+          $diff = $ref_force[$j]-$temp_force[$j];
+          $diff = abs $diff;
+          if($diff > $max_diff){
+            $max_diff = $diff;
+            $max_position = $j+1;
+          }
+        }
+        print "File Number: $i\n  Max Diff: $max_diff\n  Max Pos:  $max_position\n\n";
+      }
+    }

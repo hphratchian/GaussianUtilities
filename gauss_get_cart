@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+#
+#   This script is used to get the set of Cartesian coordinates from a
+#   Gaussian log file.  The log file must have an archive entry for this to
+#   work, and the Cartesians reported are those in the archive entry.
+#   Exectution is carried out by:
+#
+#       %>gauss_get_cart FILE_1 FILE_2 ... FILE_N
+#
+#   FILE_1 through FILE_N are the files of interest.
+#
+#
+#   Most Recent Modification Date: 6/22/2008
+#                   Hrant P. Hratchian,
+#                   Dept. of Chemistry, Indiana University
+#                   hhratchi@indiana.edu
+#
+#
+    use lib "/Users/hrant/bin/";
+    use lib "/home/hrant/bin/";
+    use GaussLib;
+#
+#   Get the filenames we need to look at.
+#
+    chomp((@gaussian_files)=@ARGV);
+    if(!@gaussian_files){@gaussian_files=glob"*.log"};
+#
+#   Get the archive for each file.
+#
+    foreach $file_name (@gaussian_files){
+      chomp($file_name);
+      ($normal_term,$Maximum_Force,$RMS_Force,$Maximum_Displacement,
+        $RMS_Displacement,$oniom_energy,$zpe_correction_logfile,
+        $thermal_correction_enthalpy,$thermal_correction_gibbs,$temperature,
+        $pressure,$archive{$file_name}) = get_gauss_log_data($file_name);
+      if($normal_term){die "\n$file_name did not terminate normally!\n\n"}
+      push (@archives,$archive);
+    }
+#
+#   Now, get the Cartesian coordinates from each file and report them.
+#
+    $cart_block_format = "%-5s\t%10.6f\t%10.6f\t%10.6f\n";
+    foreach $temp (@gaussian_files){
+      ($route,$title,$mol_spec,$op_input) = gauss_archive_input_file_data($archive{$temp});
+      @cart = ();
+      @cart = gauss_molspec2cart($mol_spec,$op_input);
+      @atomic_symbols = gauss_molspec2atomicsymbols($mol_spec);
+      $NAtoms = @cart/3;
+      print " $temp\n";
+      $cartfile = $temp;
+      if($temp =~ /\.log/){
+        $cartfile =~ s/\.log/.cart/;
+      }elsif($temp =~ /\.out/){
+        $cartfile =~ s/\.out/.cart/;
+      }else{
+        $cartfile .= ".cart";
+      }
+      open CARTFILE,"> $cartfile";
+      for ($i=0;$i<$NAtoms;$i++){
+        $start = 3*$i;
+        printf CARTFILE "$cart_block_format", $atomic_symbols[$i],
+          $cart[$start],$cart[$start+1],$cart[$start+2];
+      }
+      close CARTFILE;
+    }
