@@ -7,4 +7,5 @@ gauss_batch
 gauss_normalterm_test
 glink_times.pl
 gjf2com.pl
+log2out
 Opt_Convergence.pl

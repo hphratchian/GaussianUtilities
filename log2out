@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+#
+# POD block.  To view these comments in a formatted fashion, use perldoc or
+# any of the other POD utilities to form man-style pages.
+#
+
+=head1 NAME
+
+log2out - This script is used to move .log files to .out files.
+
+=head1 SYNOPSIS
+
+As optional arguments, this script takes a list of .log files to move to
+the corresponding .out files.  These arguments must include the file
+extension.  Any arguments given without the .log extension are ignored.  If
+no arguments are given, then all .log files in the current working
+directory are moved to their corresponding .out files.
+
+=head1 USAGE
+
+Here are some example uses of log2out...
+
+1. To move the file test1.log to test1.out use the command:
+      log2out test1.log
+
+2. To move the files test1.log, test2.log, and test3.log use the command:
+      log2out test1.log test2.log test3.log
+
+3. To move all .log files beginning with aaa use the command:
+      log2out aaa*.log
+
+4. To move all .log files in the cwd use the command:
+      log2out
+
+=head1 AUTHOR
+
+=over 2
+
+=item Hrant P. Hratchian
+
+=item Department of Chemistry
+
+=item Indiana University
+
+=item hhratchi@indiana.edu
+
+=back
+
+=cut
+
+#
+#
+    @log_files=@ARGV;
+    if(!@log_files){@log_files=glob"*.log"};
+    print "Here are the log files:\n";
+    foreach(@log_files){
+      chomp;
+      $out_file = $_;
+      $out_file =~ s/\.log/\.out/;
+      print "Moving $_ to $out_file.\n";
+      `mv $_ $out_file`;
+    }
