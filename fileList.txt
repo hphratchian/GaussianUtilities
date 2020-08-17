@@ -3,6 +3,7 @@ GaussLib.pm
 MakeArcs.pl
 MakeFChks
 Table_Gauss.pl
+gau-diff
 gauss_batch
 gauss_get_angle
 gauss_get_cart
