@@ -14,5 +14,6 @@ gauss_normalterm_test
 ginput_info.pl
 glink_times.pl
 gjf2com.pl
+interpolate_input
 log2out
 Opt_Convergence.pl
