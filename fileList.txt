@@ -11,6 +11,7 @@ gauss_get_distance
 gauss_get_force
 gauss_get_mulliken
 gauss_normalterm_test
+garchive_expand.pl
 ginput_info.pl
 glink_times.pl
 gjf2com.pl
