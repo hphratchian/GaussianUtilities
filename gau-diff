@@ -85,7 +85,9 @@ default.
 #   Load the arguments and GAUSSIAN log file names from the command line.
 #
     foreach (@ARGV){
-      if(/^-link=l(\d+)$/i){
+      if(/^-h$/i){
+        exec "perldoc gau-diff";
+      }elsif(/^-link=l(\d+)$/i){
         $do_link = $1;
       }elsif(/^-numfilter$/i){
         $numfilter=1;

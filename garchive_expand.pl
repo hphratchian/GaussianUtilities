@@ -12,6 +12,7 @@
 #
 #
     use lib "/Users/hhratchian/bin/";
+    use lib "/home/hhratchian/bin/";
     use GaussLib;
 #
 #   Get the names of the files we need to look at.
