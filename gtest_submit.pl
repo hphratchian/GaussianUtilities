@@ -60,7 +60,7 @@
       die "\n\nFound $found_gauss_arg Gaussian argument switches. Only one is allowed!\n\n";
     }
     if(! @in_files){
-      @in_files = glob "*.com";
+      @in_files = glob "*.com *.gjf";
     }
 #
 #   Run the jobs and diff the .log and .out.  Note that this diff uses our
@@ -68,7 +68,7 @@
 #   
     foreach $current_job (@in_files){
       chomp($current_job);
-      $current_job =~ s/\.com//;
+      $current_job =~ s/\.(com|gjf)//;
       print "\nRunning $current_job...\n";
       system "/bin/tcsh", "-c", "$gauss_arg < $current_job.com >& $current_job.log";
       system "gau-diff $current_job.log $current_job.out > $current_job.diff";
