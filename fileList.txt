@@ -16,6 +16,7 @@ gdiff_tests
 ginput_info.pl
 glink_times.pl
 gjf2com.pl
+gtest_submit.pl
 interpolate_input
 log2out
 Opt_Convergence.pl
