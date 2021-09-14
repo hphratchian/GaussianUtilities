@@ -18,9 +18,9 @@
 #
 #
 #   Hrant P. Hratchian
-#   Department of Chemistry
-#   Indiana University
-#   hhratchi@indiana.edu
+#   Department of Chemistry & Chemical Biology
+#   University of California, Merced
+#   hhratchian@ucmerced.edu
 #
 #
 #

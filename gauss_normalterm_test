@@ -76,6 +76,7 @@ Latest Modification(s): May 22, 2009.
     use lib "/home/hrant/bin/";
     use lib "/mf/hrant/bin/";
     use lib "/Users/hhratchian/bin/";
+    use lib "/home/hhratchian/bin/";
     use GaussLib;
 #
 #   Get the atom number and names of the files we need to look at.

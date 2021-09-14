@@ -83,19 +83,19 @@ Use the "gt1" command when running jobs.
 
 =item Hrant P. Hratchian
 
-=item Gaussian, Inc.
+=item Department of Chemistry & Biochemistry
 
-=item 340 Quinnipiac St., Bldg. 40
+=item University of California, Merced
 
-=item Wallingford, CT 06492
+=item Merced, CA 95343
 
-=item hrant@gaussian.com
+=item hhratchian@ucmerced.edu
 
 =back
 
 =head1 HISTORY
 
-Latest Modification(s): October 28, 2008.
+Latest Modification(s): May 24, 2021.
 
 =cut
 
@@ -106,14 +106,17 @@ Latest Modification(s): October 28, 2008.
     foreach $temp (@ARGV){
       chomp($temp);
       if($temp =~ /^-/){
-        if($temp =~ /^-gdv$/){
+        print "temp = -->$temp<--\n";
+        if($temp =~ /^-h$/i){
+          exec "perldoc gauss_batch";
+        }elsif($temp =~ /^-gdv$/){
           $gauss_cmd = "gdv";
         }elsif($temp =~ /^-g09$/){
           $gauss_cmd = "g09";
         }elsif($temp =~ /^-gt$/){
-          $gauss_cmd = "gt";
+          $gauss_cmd = "gdv -exedir=\$HOME/gauss:\$HOME/gauss/exe-dir:\$GAUSS_EXEDIR";
         }elsif($temp =~ /^-gt1$/){
-          $gauss_cmd = "gt1";
+          $gauss_cmd = "gdv -exedir=\$HOME/gauss:\$HOME/gauss/exe-dir1:\$GAUSS_EXEDIR";
         }else{
           die "\n\nUnknown argument: $temp\n\n";
         }
@@ -130,7 +133,7 @@ Latest Modification(s): October 28, 2008.
       $current_job_short = $current_job;
       $current_job_short =~ s/\.(com|gjf)$//;
       print "\nRunning $current_job...\n";
-      system "/bin/tcsh", "-c", "$gauss_cmd < $current_job >& $current_job_short.log";
+      system "/bin/tcsh","-i", "-c", "gdvcode && $gauss_cmd < $current_job >& $current_job_short.log";
       print "   Done with $current_job\n";
     }
     print "\n\nBatch run complete.\n";

@@ -65,19 +65,19 @@ and file paths are not compared.
 
 =item Hrant P. Hratchian
 
-=item Gaussian, Inc.
+=item Department of Chemistry and Biochemistry
 
-=item 340 Quinnipiac St., Bldg. 40
+=item University of California, Merced
 
-=item Wallingford, CT 06492
+=item Merced, CA 95343
 
-=item hrant@gaussian.com
+=item hhratchian@ucmerced.edu
 
 =back
 
 =head1 HISTORY
 
-Latest Modification(s): August 15, 2008.
+Latest Modification(s): March 29, 2021.
 
 =cut
 
@@ -85,7 +85,9 @@ Latest Modification(s): August 15, 2008.
 #   Load arguments.
 #
     foreach (@ARGV){
-      if(/^-link=l(\d+)$/i){
+      if(/^-h$/i){
+        exec "perldoc gdiff_tests";
+      }elsif(/^-link=l(\d+)$/i){
         $do_link = $1;
       }elsif(/^-(.*)/){
         die "\n\nUnknown argument sent to gdiff_tests.pl: $1\n\n";
@@ -93,13 +95,13 @@ Latest Modification(s): August 15, 2008.
         push(@in_files,$_);
       }
     }
-    if(!@in_files){@in_files = glob "*.com"};
+    if(!@in_files){@in_files = glob "*.com *.gjf"};
 #
 #   Diff the .log and .out.  Note that this diff uses our gau-diff script.
 #   
     foreach $current_job (@in_files){
       chomp($current_job);
-      $current_job =~ s/\.com//;
+      $current_job =~ s/\.(com|gjf)//;
       print "Checking $current_job...\n";
       if($do_link){
         system "gau-diff -link=l$do_link $current_job.log $current_job.out > $current_job.diff1";
