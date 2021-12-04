@@ -12,6 +12,8 @@ gauss_get_force
 gauss_get_mulliken
 gauss_normalterm_test
 garchive_expand.pl
+gbatch-merced
+g16batch-merced
 gdiff_tests
 ginput_info.pl
 glink_times.pl
