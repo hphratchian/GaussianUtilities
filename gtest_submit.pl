@@ -68,10 +68,12 @@
 #   
     foreach $current_job (@in_files){
       chomp($current_job);
-      $current_job =~ s/\.(com|gjf)//;
+      $current_job_short = $current_job;
+      $current_job_short =~ s/\.(com|gjf)//;
       print "\nRunning $current_job...\n";
-      system "/bin/tcsh", "-c", "$gauss_arg < $current_job.com >& $current_job.log";
-      system "gau-diff $current_job.log $current_job.out > $current_job.diff";
+      print "\t\tCommand: gdvcode && $gauss_arg < $current_job >& $current_job_short.log\n";
+      system "/bin/tcsh", "-i", "-c", "gdvcode && $gauss_arg < $current_job >& $current_job_short.log";
+      system "gau-diff $current_job_short.log $current_job_short.out > $current_job_short.diff";
       print "   Done with $current_job\n";
     }
 #

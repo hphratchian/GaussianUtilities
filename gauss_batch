@@ -133,6 +133,7 @@ Latest Modification(s): May 24, 2021.
       $current_job_short = $current_job;
       $current_job_short =~ s/\.(com|gjf)$//;
       print "\nRunning $current_job...\n";
+      print "\t\tCommand: gdvcode && $gauss_cmd < $current_job >& $current_job_short.log\n";
       system "/bin/tcsh","-i", "-c", "gdvcode && $gauss_cmd < $current_job >& $current_job_short.log";
       print "   Done with $current_job\n";
     }

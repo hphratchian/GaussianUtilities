@@ -114,7 +114,7 @@ Latest Modification(s): March 29, 2021.
 #   differences exist.  Then remove the diff files.
 #   
     foreach $diff_file (@in_files){
-      $diff_file =~ s/\.com//;
+      $diff_file =~ s/\.(com|gjf)//;
       $diff_file .= ".diff1";
       open DIFFFILE,"< $diff_file";
       $temp = undef;
