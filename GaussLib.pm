@@ -342,7 +342,7 @@
 #
       use strict;
       my($archive_in);
-      my($i);
+      my($i,$nResultsSections);
       my(@archive_sections,@temp,$i,$results_section_num,$results_temp,
         @results);
       my($cisd_energy,$ccsd_paren_t_energy,$ccsd_energy,$mp4sdtq_energy,
@@ -362,9 +362,17 @@
       @archive_sections = split /\\\\/, $archive_in;
       @temp = split /\\/, $archive_sections[0];
       $results_section_num = gauss_archive_num_op_sections($temp[9]);
+
+#hph      print "results_section_num = $results_section_num\n";
+      $nResultsSections = @archive_sections;
+#hph      print "nResultsSections = $nResultsSections\n";
+
       $results_temp = $archive_sections[$results_section_num];
+      $results_temp = $archive_sections[$nResultsSections-2];
+
       @results = split /\\/, $results_temp;
       for ($i=0;$i<@results;$i++){
+#hph        print "Hrant - results[i] = $results[$i]\n";
         if($results[$i] =~ /^CISD=(-?\d*.\d*)/){
           $cisd_energy = $1;
         }elsif($results[$i] =~ /^CCSD\(T\)=(-?\d*.\d*)/){

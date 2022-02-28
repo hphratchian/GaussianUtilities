@@ -163,13 +163,22 @@ default.
     print TEMP2 "$log2_lines";
     close TEMP2;
 #
-#   Diff the two gau-diff.temp* files.
+#   Set small FP numbers to 0.00 in the two temp files. Then, diff the two
+#   gau-diff.temp* files.
 #   
-    system "diff gau-diff.temp1 gau-diff.temp2";
+    system 'sed -e \'s/\([ -+][0-9]*\.[0-9][0-9][0-9][0-9][0-9]\)[0-9]*/\1/g\' gau-diff.temp1 > gau-diff.temp11';
+    system 'sed -e \'s/\([ -+][0-9]*\.[0-9][0-9][0-9][0-9][0-9]\)[0-9]*/\1/g\' gau-diff.temp2 > gau-diff.temp12';
+    system 'sed -e \'s/[ -+][0-9]\.[0-9][0-9]*D-1[0-9]/ 0.00      /g\' gau-diff.temp11 > gau-diff.temp21';
+    system 'sed -e \'s/[ -+][0-9]\.[0-9][0-9]*D-1[0-9]/ 0.00      /g\' gau-diff.temp12 > gau-diff.temp22';
+    system "diff gau-diff.temp21 gau-diff.temp22";
 #
 #   Remove the two temp files.
 #
     if($savefiles != 1){
       unlink "gau-diff.temp1";
       unlink "gau-diff.temp2";
+      unlink "gau-diff.temp11";
+      unlink "gau-diff.temp12";
+      unlink "gau-diff.temp21";
+      unlink "gau-diff.temp22";
     }
